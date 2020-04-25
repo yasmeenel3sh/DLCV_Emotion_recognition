@@ -54,7 +54,7 @@ model.add(Activation('softmax'))
 
 print(model.summary())
 
-epochs = 30
+epochs = 15
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 train_one_hot_labels = keras.utils.to_categorical(y_train, num_classes=num_classes)
@@ -63,10 +63,35 @@ valid_one_hot_labels = keras.utils.to_categorical(y_valid, num_classes=num_class
 history = model.fit(x_train, train_one_hot_labels, epochs=epochs, batch_size=batch_size, validation_data=(x_valid,valid_one_hot_labels))
 
 test_set = []
-for i in range(10):
-    test = np.array(Image.open('test/angry/' + str(i) + '.jpg'))
+for i in range(30):
+    if(i<10):
+        test = np.array(Image.open('test/angry/' + str(i) + '.jpg'))
+    elif(i<20):
+        test = np.array(Image.open('test/happy/' + str(i-10) + '.jpg'))
+    else:
+        test = np.array(Image.open('test/sadness/' + str(i-20) + '.jpg'))    
     test_set.append(test)
 test_set = np.array(test_set)
 
 m = model.predict(test_set.reshape(test_set.shape[0],48,48,1))
 print(m)
+test_accur=0
+for i in range(30):
+    maxval=np.argmax(m[i])
+    if(maxval==0):
+        print("angry")
+        if(i<10):
+            test_accur+=1
+    elif(maxval==2):
+        print("happy")
+        if(10<=i<20):
+            test_accur+=1
+    else:
+        print("saddness")
+        if(20<=i<30):
+            test_accur+=1
+
+test_accur=(test_accur/30)*100           
+print(test_accur)
+    
+
