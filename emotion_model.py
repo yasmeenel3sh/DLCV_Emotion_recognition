@@ -12,14 +12,18 @@ from keras.layers import Conv2D, MaxPooling2D
 
 num_classes = 3
 rows, cols = 48, 48
-batch_size = 32
+batch_size = 12
 
 train_data = []
 labels = []
 for i, emotion in enumerate(['anger','sadness', 'happy']):
     filelist = glob.glob(emotion + '/*.png')
-    train_data = np.append(train_data, np.array([np.array(Image.open(fname)) for fname in filelist]))
-    labels = np.append(labels, np.ones(train_data.shape) * i)
+    x = np.array([np.array(Image.open(fname)) for fname in filelist])
+    if(len(train_data) > 0):
+        train_data = np.append(train_data, x, axis=0)
+    else:
+        train_data = x
+    labels = np.append(labels, np.ones(x.shape[0]) * i)
 train_data = train_data.reshape(train_data.shape[0],rows,cols,1)
 
 model = Sequential()
@@ -51,4 +55,4 @@ epochs = 3
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 one_hot_labels = keras.utils.to_categorical(labels, num_classes=num_classes)
 
-history = model.fit(train_data, labels, epochs=epochs, batch_size=batch_size)
+history = model.fit(train_data, one_hot_labels, epochs=epochs, batch_size=batch_size)
