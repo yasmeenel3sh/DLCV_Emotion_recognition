@@ -56,3 +56,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 one_hot_labels = keras.utils.to_categorical(labels, num_classes=num_classes)
 
 history = model.fit(train_data, one_hot_labels, epochs=epochs, batch_size=batch_size)
+
+test = np.array(Image.open('2.jpg'))
+m = model.predict(test.reshape(1,48,48,1))
+print(m)
