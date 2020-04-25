@@ -33,14 +33,14 @@ x_train, x_valid, y_train, y_valid = train_test_split(train_data, labels, test_s
 model = Sequential()
 
 # Block 1
-model.add(Conv2D(10, (3,3), padding='same', kernel_initializer='he_normal', input_shape=(rows,cols,1)))
+model.add(Conv2D(32, (3,3), padding='same', kernel_initializer='he_normal', input_shape=(rows,cols,1)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(Conv2D(10, (3,3), padding='same', kernel_initializer='he_normal', input_shape=(rows,cols,1)))
+model.add(Conv2D(32, (3,3), padding='same', kernel_initializer='he_normal', input_shape=(rows,cols,1)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D((2,2),2))
-model.add(Dropout(0.2))
+model.add(Dropout(0.4))
 
 # Block 5
 model.add(Flatten())
