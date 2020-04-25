@@ -28,7 +28,7 @@ for i, emotion in enumerate(['anger','sadness', 'happy']):
     labels = np.append(labels, np.ones(x.shape[0]) * i)
 train_data = train_data.reshape(train_data.shape[0],rows,cols,1)
 
-x_train, x_valid, y_train, y_valid = train_test_split(train_data, labels, test_size=0.33, shuffle= True)
+x_train, x_valid, y_train, y_valid = train_test_split(train_data, labels, test_size=0.20, shuffle= True)
 
 model = Sequential()
 
@@ -40,7 +40,7 @@ model.add(Conv2D(32, (3,3), padding='same', kernel_initializer='he_normal', inpu
 model.add(Activation('elu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D((2,2),2))
-model.add(Dropout(0.4))
+model.add(Dropout(0.3))
 
 # Block 5
 model.add(Flatten())
@@ -62,11 +62,11 @@ valid_one_hot_labels = keras.utils.to_categorical(y_valid, num_classes=num_class
 
 history = model.fit(x_train, train_one_hot_labels, epochs=epochs, batch_size=batch_size, validation_data=(x_valid,valid_one_hot_labels))
 
-test = np.array(Image.open('2.jpg'))
 test_set = []
-test_set.append(test)
-test_set.append(test)
+for i in range(10):
+    test = np.array(Image.open('test/angry/' + str(i) + '.jpg'))
+    test_set.append(test)
 test_set = np.array(test_set)
+
 m = model.predict(test_set.reshape(test_set.shape[0],48,48,1))
 print(m)
-print(np.where(m==np.max(m)))
